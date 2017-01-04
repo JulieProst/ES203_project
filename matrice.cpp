@@ -10,6 +10,15 @@ Matrice::Matrice(unsigned int h, unsigned int w)
 	m_width=w;
 }
 
+Matrice::Matrice(const Matrice& m)
+{
+	m_width=m.m_width;
+	m_height=m.m_height;
+	m_data=new int[m_width*m_height];
+	for(unsigned int i=0;i<m_width*m_height;i++)
+		m_data[i]=m.m_data[i];
+}
+
 Matrice::~Matrice()
 {
 	delete m_data;
@@ -28,4 +37,3 @@ int& Matrice::operator()(unsigned int i)
 		throw std::runtime_error( "Indices out of range." );
 	return m_data[i];
 }
-
