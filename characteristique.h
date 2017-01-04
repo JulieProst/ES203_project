@@ -1,0 +1,2 @@
+int perimetre(matrice matrice);
+
