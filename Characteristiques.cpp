@@ -58,3 +58,14 @@ int surface(Matrice matr){
     return surf;
 }
 
+/* Donne les caractéristiques d'une matrice 64x64
+ caracteres[0] : perimeter
+ caracteres[1] : surface
+*/
+std::vector<int> mat_to_vector(const Matrice& matrice)
+{
+    std::vector<int> caracteres;
+    caracteres.push_back(perimeter(matrice));
+    caracteres.push_back(surface(matrice));
+    return caracteres;
+}
