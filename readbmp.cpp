@@ -1,11 +1,14 @@
 #include"readbmp.h"
 #include<iostream>
 #include<stdio.h>
+#include<stdexcept>
 
 Matrice readBMP(const std::string& filename)
 {
     unsigned char head[54];
     FILE *f = fopen(filename.c_str(),"rb");
+    if(f==NULL)
+	throw std::runtime_error( "Impossible d'ouvrir le fichier." );
 
     // BMP header is 54 bytes
     fread(head, 1, 54, f);

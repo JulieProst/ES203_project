@@ -67,7 +67,7 @@ std::ostream& operator<<(std::ostream& oss, const Matrice& M)
 
 Matrice Matrice::sous_matrice(unsigned int i, unsigned int j, unsigned int h, unsigned int w)
 {
-	if(i+h>= m_height || j+w >= m_width)
+	if(i+h> m_height || j+w > m_width)
 		throw std::runtime_error( "Indices out of range." );
 	Matrice mat(h,w);
 
