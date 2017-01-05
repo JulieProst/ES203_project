@@ -1,5 +1,4 @@
 #include <iostream>
-#include "matrice.h"
 #include "Characteristiques.h"
 #include <vector>
 
@@ -36,7 +35,7 @@ int perimeter(Matrice matrice)
     }
 
     // On compte les voisins blancs de chaque pixel noir
-    for(int k = 0; k<Index.size(); k++){
+    for(unsigned int k = 0; k<Index.size(); k++){
         int i = Index[k].i;
         int j = Index[k].j;
         nbr_vois = nbr_voisins_blanc(matrice,i,j);
@@ -68,4 +67,61 @@ std::vector<int> mat_to_vector(const Matrice& matrice)
     caracteres.push_back(perimeter(matrice));
     caracteres.push_back(surface(matrice));
     return caracteres;
+}
+
+// Renvoit 1 si le pixel (x,y) est externe, 0 sinon
+bool is_external(Matrice mat, unsigned int x, unsigned int y)
+{
+    int nbr_noir=0;
+    Matrice matrice = mat.sous_matrice(x,y,2,2);
+    nbr_noir = matrice.somme();
+    if(nbr_noir==3)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+// Renvoit 1 si le pixel (x,y) est interne, 0 sinon
+bool is_internal(Matrice mat,unsigned int x, unsigned int y)
+{
+    int nbr_noir=0;
+    Matrice matrice = mat.sous_matrice(x,y,2,2);
+    nbr_noir = matrice.somme();
+
+    if(nbr_noir==1)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int nbr_trous(const Matrice& matrice)
+{
+    int nbr_t=0;
+    int e=0, i=0;
+
+    for(unsigned int x=0; x<63; x++)
+    {
+        for(unsigned int y=0; y<63; y++)
+        {
+            if(is_external(matrice, x, y))
+            {
+                e++;
+            }
+            else if(is_internal(matrice,x,y))
+            {
+                i++;
+            }
+        }
+    }
+
+    nbr_t = (e-i)/4;
+    return(nbr_t);
 }

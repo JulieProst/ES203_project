@@ -79,8 +79,18 @@ Matrice Matrice::sous_matrice(unsigned int i, unsigned int j, unsigned int h, un
 
 Matrice Matrice::lettre(unsigned int n)
 {
-	int i,j;	
+	int i,j;
 	i=n/(w()/64);
 	j=n%(w()/64);
 	return sous_matrice(i*64,j*64,64,64);
+}
+
+int Matrice::somme()
+{
+    int sum = 0;
+    for(unsigned int i=0; i<m_width*m_height; i++)
+    {
+        sum+=m_data[i];
+    }
+    return sum;
 }
