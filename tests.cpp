@@ -27,3 +27,10 @@ void test_mat_to_vector(const std::string& filename)
     caracteres = mat_to_vector(matrice);
     std::cout << caracteres << std::endl;
 }
+
+void test_nbr_trous(const std::string& filename)
+{
+    Matrice matrice = readBMP(filename).lettre(0);
+    int nb_trous = nbr_trous(matrice);
+    cout << nb_trous << endl;
+}
