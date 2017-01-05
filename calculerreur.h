@@ -3,7 +3,9 @@
 
 #include "matrice.h"
 #include <string>
+#include <vector>
 #include"readbmp.h"
+#include"struct.h"
 
 struct fichierImage
 {
@@ -11,8 +13,7 @@ struct fichierImage
 	int nb,value;
 };
 
-
-int methodeBidon(const Matrice&);
-void calculErreur(int(*f)(const Matrice&),const std::string& name);
+void calculErreur(int(*f)(const std::vector<Point>,const Matrice&),const std::string& nom);
+void chargerInfoFichiers(std::vector<fichierImage>*img,std::string str);
 
 #endif
