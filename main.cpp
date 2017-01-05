@@ -6,6 +6,6 @@
 int main()
 {
 	srand (time(NULL));
-	calculErreur(methodeBidon,"methodeBidon");
+	calculErreur(methodeBidon,"blabla");
 	return 0;
 }
