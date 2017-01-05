@@ -49,9 +49,3 @@ Matrice readBMP(const std::string& filename)
     return mat;
 }
 
-int main()
-{
-	Matrice mat(readBMP(std::string("appr_0.bmp")));
-	std::cout<<mat.sous_matrice(64,64,64,64);
-	return 0;
-}
