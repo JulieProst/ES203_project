@@ -2,12 +2,21 @@
 #include <vector>
 #include<string>
 #include<stdlib.h>
+#include<sstream>
 #include<time.h>
 #include<fstream>
 
 int methodeBidon(const Matrice &)
 {
 	return (rand()%11)-1;
+}
+
+
+std::string inString(int n)
+{
+	std::stringstream out;
+	out << n;
+	return out.str();	
 }
 
 static void chargerInfoFichiers(std::vector<fichierImage>*img)
@@ -40,10 +49,10 @@ static std::string analyseFichier(int(*f)(const Matrice&),const fichierImage& fi
 
 	std::cout<<"\tErreur de "<<100-detected[file.value]*100/file.nb<<"%"<<std::endl;
 
-	std::string str=std::to_string(file.value);
+	std::string str=inString(file.value);
 	for(int i=0;i<11;i++) {
 		str+=",";
-		str+=std::to_string(detected[i]);
+		str+=inString(detected[i]);
 	}
 	
 	return str+"\n";
