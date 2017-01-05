@@ -15,7 +15,8 @@ class Matrice
 		unsigned int w() const;
 		unsigned int h() const;
 		Matrice sous_matrice(unsigned int i, unsigned int j, unsigned int h, unsigned int w);
-		Matrice lettre(unsigned int i);	
+		Matrice lettre(unsigned int i);
+		int somme();
 
 	private :
 		int * m_data;
