@@ -2,8 +2,8 @@
 #define KPPV
 
 #include<vector>
-#include"struc.h"
+#include"struct.h"
 
-int kppv(const std::vector<Point>& graph, Point pt_rec);
+int kppv(const std::vector<Point>& graph, const Point &pt_rec);
 
-#define KPPV
+#endif

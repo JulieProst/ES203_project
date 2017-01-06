@@ -13,7 +13,7 @@ struct fichierImage
 	int nb,value;
 };
 
-void calculErreur(int(*f)(const std::vector<Point>,const Matrice&),const std::string& nom);
+void calculErreur(std::vector<int>(*f)(const Matrice&),int(*g)(const std::vector<Point>&,const Point&),const std::string& nom);
 void chargerInfoFichiers(std::vector<fichierImage>*img,std::string str);
 
 #endif
