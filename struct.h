@@ -8,4 +8,9 @@ struct Point{
 	int etiquette;
 };
 
+enum TypeVision{
+	WATCH,
+	LEARN_AND_WATCH
+};
+
 #endif

@@ -97,14 +97,25 @@ static void createImages(std::string nom,std::vector<Matrice>* ensembleImage)
 	}
 }
 
-void calculErreur(std::vector<int>(*f)(const Matrice&),int(*g)(const std::vector<Point>&,const Point&),const std::string& nom)
+void calculErreur(std::vector<int>(*f)(const Matrice&),int(*g)(const std::vector<Point>&,const Point&),const std::string& nom,TypeVision t)
 {
 	std::vector<fichierImage>img;
 	chargerInfoFichiers(&img,"rec");
 
 	std::vector<Matrice> ensembleImage[11];
 
-	std::vector<Point> graph(createGraphe(f));
+
+	std::vector<Point> graph;
+
+
+	std::ifstream ff(nom+"/apprentissage.txt");
+	if(t==LEARN_AND_WATCH || !ff.good()) 
+		graph=createGraphe(f,nom);
+	else
+	{
+		std::cout<<"Loading Graph."<<std::endl;
+		loadGraph(&graph,nom);
+	}
 
 
 	std::ofstream file;
