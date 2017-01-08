@@ -65,7 +65,7 @@ std::ostream& operator<<(std::ostream& oss, const Matrice& M)
 	return oss;
 }
 
-Matrice Matrice::sous_matrice(unsigned int i, unsigned int j, unsigned int h, unsigned int w)
+Matrice Matrice::sous_matrice(unsigned int i, unsigned int j, unsigned int h, unsigned int w) const
 {
 	if(i+h> m_height || j+w > m_width)
 		throw std::runtime_error( "Indices out of range." );
@@ -91,6 +91,26 @@ int Matrice::somme()
     for(unsigned int i=0; i<m_width*m_height; i++)
     {
         sum+=m_data[i];
+    }
+    return sum;
+}
+
+unsigned int somme_line(const Matrice& matrice, int i)
+{
+    unsigned int sum = 0;
+    for(unsigned int k=0; k<matrice.w(); k++)
+    {
+        sum+=matrice(i,k);
+    }
+    return sum;
+}
+
+unsigned int somme_col(const Matrice& matrice, int j)
+{
+    unsigned int sum = 0;
+    for(unsigned int k=0; k<matrice.h(); k++)
+    {
+        sum+=matrice(k,j);
     }
     return sum;
 }

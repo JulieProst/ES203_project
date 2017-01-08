@@ -14,7 +14,7 @@ class Matrice
 		int& operator()(unsigned int i) const;
 		unsigned int w() const;
 		unsigned int h() const;
-		Matrice sous_matrice(unsigned int i, unsigned int j, unsigned int h, unsigned int w);
+		Matrice sous_matrice(unsigned int i, unsigned int j, unsigned int h, unsigned int w) const;
 		Matrice lettre(unsigned int i);
 		int somme();
 
@@ -23,6 +23,10 @@ class Matrice
 		unsigned int m_width,m_height;
 };
 
+
 std::ostream& operator<<(std::ostream& oss, const Matrice& M);
+
+unsigned int somme_line(const Matrice& matrice, int i);
+unsigned int somme_col(const Matrice& matrice, int j);
 
 #endif

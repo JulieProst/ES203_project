@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Characteristiques.h"
+#include "matrice.h"
 #include <vector>
 
 using namespace std;
@@ -60,12 +61,22 @@ int surface(Matrice matr){
 /* Donne les caractéristiques d'une matrice 64x64
  caracteres[0] : perimeter
  caracteres[1] : surface
+ caracteres[2] : nombre de trous
 */
 std::vector<int> mat_to_vector(const Matrice& matrice)
 {
     std::vector<int> caracteres;
-    caracteres.push_back(perimeter(matrice));
-    caracteres.push_back(surface(matrice));
+    int perimetre = perimeter(matrice);
+    int surf = surface(matrice);
+    Matrice matricebis = encadrement_chiffre(matrice);
+    // Calcul du coef de normalisation pour le perimeter et la surface
+    int height = matricebis.h(), width = matricebis.w();
+    int coef_norm = 10000/(height*width);
+    matricebis = remplissage(matricebis);
+    int nb_trous = nbr_trous(matricebis);
+    caracteres.push_back(coef_norm*perimetre);
+    caracteres.push_back(coef_norm*surf);
+    caracteres.push_back(nb_trous);
     return caracteres;
 }
 
@@ -75,12 +86,10 @@ bool is_external(Matrice mat, unsigned int x, unsigned int y)
     int nbr_noir=0;
     Matrice matrice = mat.sous_matrice(x,y,2,2);
     nbr_noir = matrice.somme();
-    if(nbr_noir==3)
-    {
+    if(nbr_noir==1){
         return 1;
     }
-    else
-    {
+    else{
         return 0;
     }
 }
@@ -92,14 +101,59 @@ bool is_internal(Matrice mat,unsigned int x, unsigned int y)
     Matrice matrice = mat.sous_matrice(x,y,2,2);
     nbr_noir = matrice.somme();
 
-    if(nbr_noir==1)
-    {
+    if(nbr_noir==3){
         return 1;
     }
-    else
-    {
+    else{
         return 0;
     }
+}
+
+
+// Supprime les lignes et les colonnes entièrement blanches de la matrice 64x64 entrée en argument
+Matrice encadrement_chiffre(const Matrice& matrice)
+{
+    unsigned int nbr_line_deb=0, nbr_line_fin=matrice.h()-1, nbr_col_deb=0, nbr_col_fin=matrice.w()-1;
+    // On cherche le nombre de lignes entièrement blanches au dessus du chiffre
+    while(somme_line(matrice, nbr_line_deb)==matrice.w()){
+        nbr_line_deb++;
+    }
+    while(somme_line(matrice, nbr_line_fin)==matrice.w()){
+        nbr_line_fin--;
+    }
+    while(somme_col(matrice, nbr_col_deb)==matrice.h()){
+        nbr_col_deb++;
+    }
+    while(somme_col(matrice, nbr_col_fin)==matrice.h()){
+        nbr_col_fin--;
+    }
+
+    int h = nbr_line_fin - nbr_line_deb;
+    int w = nbr_col_fin - nbr_col_deb;
+    return matrice.sous_matrice(nbr_line_deb, nbr_col_deb, h, w);
+}
+
+
+// Remplissage des bords de la sous-matrice obtenue par encadrement
+Matrice remplissage(const Matrice& matrice)
+{
+    unsigned int j = 0;
+    int k = matrice.w()-1;
+    for(unsigned int i=0; i<matrice.h(); i++){
+        // Pour remplir en noir les bords gauche de l'image
+        while(matrice(i,j)==1 && j<matrice.w()){
+            matrice(i,j)=0;
+            j++;
+        }
+        j=0;
+        // Pour remplir en noir les bords droit de l'image
+        while(matrice(i,k)==1 && k>=0){
+            matrice(i,k)=0;
+            k--;
+        }
+        k=matrice.w()-1;
+    }
+    return matrice;
 }
 
 int nbr_trous(const Matrice& matrice)
@@ -107,21 +161,16 @@ int nbr_trous(const Matrice& matrice)
     int nbr_t=0;
     int e=0, i=0;
 
-    for(unsigned int x=0; x<63; x++)
-    {
-        for(unsigned int y=0; y<63; y++)
-        {
-            if(is_external(matrice, x, y))
-            {
+    for(unsigned int x=0; x<matrice.h()-1; x++){
+        for(unsigned int y=0; y<matrice.w()-1; y++){
+            if(is_external(matrice, x, y)){
                 e++;
             }
-            else if(is_internal(matrice,x,y))
-            {
+            else if(is_internal(matrice,x,y)){
                 i++;
             }
         }
     }
-
     nbr_t = (e-i)/4;
     return(nbr_t);
 }
