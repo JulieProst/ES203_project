@@ -10,7 +10,7 @@ using namespace std;
 
 int main()
 {
-    string filename = "appr/appr_7.bmp";
+    string filename = "appr/appr_0.bmp";
     cout << "Result test perimeter" << endl;
     test_perimeter(filename);
 //    cout << "Result test mat_to_vector" << endl;
@@ -34,7 +34,7 @@ int main()
     test_nbr_trous(filename);
 
 
-//	srand (time(NULL));
-//	calculErreur(mat_to_vector,kppv,"walla",WATCH);
+	srand (time(NULL));
+	calculErreur(mat_to_vector,kppv,"walla",WATCH);
 	return 0;
 }
