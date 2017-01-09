@@ -58,10 +58,18 @@ int surface(Matrice matr){
     return surf;
 }
 
+// Prend la matrice encadrée en argument
+int rectangularite(const Matrice& mat){
+    int h_encardre = mat.h(), w_encadre = mat.w();
+    return((h_encardre*w_encadre)/64*64);
+}
+
 /* Donne les caractéristiques d'une matrice 64x64
  caracteres[0] : perimeter
  caracteres[1] : surface
- caracteres[2] : nombre de trous
+ caracteres[2] : rectangularité
+ caracteres[3] : nombre de trous
+ caracteres[4] : taille trous
 */
 std::vector<int> mat_to_vector(const Matrice& matrice)
 {
@@ -69,14 +77,20 @@ std::vector<int> mat_to_vector(const Matrice& matrice)
     int perimetre = perimeter(matrice);
     int surf = surface(matrice);
     Matrice matricebis = encadrement_chiffre(matrice);
+    int rectangle = rectangularite(matricebis);
+    int taille = taille_trous(matricebis);
+
     // Calcul du coef de normalisation pour le perimeter et la surface
     int height = matricebis.h(), width = matricebis.w();
     int coef_norm = 10000/(height*width);
+
     matricebis = remplissage(matricebis);
     int nb_trous = nbr_trous(matricebis);
     caracteres.push_back(coef_norm*perimetre);
     caracteres.push_back(coef_norm*surf);
+    caracteres.push_back(rectangle);
     caracteres.push_back(nb_trous);
+    caracteres.push_back(coef_norm*taille);
     return caracteres;
 }
 
@@ -154,6 +168,18 @@ Matrice remplissage(const Matrice& matrice)
         k=matrice.w()-1;
     }
     return matrice;
+}
+
+int taille_trous(const Matrice& matrice){
+    int taille = 0;
+    for(unsigned int i=0; i<matrice.h(); i++){
+        for(unsigned int j=0; j<matrice.w(); j++){
+            if(matrice(i,j)==1){
+                taille++;
+            }
+        }
+    }
+    return taille;
 }
 
 int nbr_trous(const Matrice& matrice)
