@@ -30,11 +30,11 @@ void test_mat_to_vector(const std::string& filename)
 
 void test_nbr_trous(const std::string& filename)
 {
-    Matrice matrice = readBMP(filename).lettre(3),m2(encadrement_chiffre(matrice));
+    Matrice matrice = encadrement_chiffre(readBMP(filename).lettre(3));
     //m2 = encadrement_chiffre(matrice);
-    cout << m2 << endl;
-    Matrice matrice_remplie = remplissage(m2);
-    cout << matrice_remplie << endl;
-    int nb_trous = nbr_trous(m2);
+    cout << matrice << endl;
+    remplissage(matrice);
+    cout << matrice << endl;
+    int nb_trous = nbr_trous(matrice);
     cout << nb_trous << endl;
 }
