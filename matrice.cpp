@@ -113,32 +113,33 @@ unsigned int somme_col(const Matrice& matrice, int j)
     return sum;
 }
 
-void Matrice::dilate() const
+Matrice  Matrice::dilate() const
 {
+	Matrice m(h(),w());
 	for(unsigned int i=0;i<m_height;i++) 
 		for(unsigned int j=0;j<m_width;j++)
 			if(m_data[i*m_width+j]==0){
 				if(i>0)
-					m_data[(i-1)*m_width+j]=0;
+					m(i-1,j)=0;
 				if(j>0)
-					m_data[i*m_width+j-1]=0;
+					m(i,j-1)=0;
 				if(i>0 && j>0)
-					m_data[(i-1)*m_width+j-1]=0;
+					m(i-1,j-1)=0;
 				if(i>0 && j<m_width-1)
-					m_data[(i-1)*m_width+j+1]=0;
+					m(i-1,j+1)=0;
 				if(j<m_width-1)
-					m_data[i*m_width+j+1]=0;
+					m(i,j+1)=0;
 				if(j<m_width-1 && i<m_height-1)
-					m_data[(i+1)*m_width+j+1]=0;
+					m(i+1,j+1)=0;
 				if(i<m_height-1)
-					m_data[(i+1)*m_width+j]=0;
+					m(i+1,j)=0;
 				if(i<m_height-1 && j>0)
-					m_data[(i+1)*m_width+j-1]=0;
-
+					m(i+1,j-1)=0;
 	}
+	return m;
 }
 
-void Matrice::erode() const 
+Matrice Matrice::erode() const
 {
 	Matrice a(*this);
 	for(unsigned int i=1;i<m_height-1;i++)
@@ -154,17 +155,16 @@ void Matrice::erode() const
 			m_data[i*m_width+j-1])
 				a(i,j)=1;
 	}
+	return a;
 }
 
-void Matrice::ouverture() const
+Matrice Matrice::ouverture() const
 {
-	erode();
-	dilate();
+	return	erode().dilate();
 }
 
-void Matrice::fermeture() const
+Matrice  Matrice::fermeture() const
 {
-	dilate();
-	erode();
+	return dilate().erode();
 }
 
