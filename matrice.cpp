@@ -115,7 +115,7 @@ unsigned int somme_col(const Matrice& matrice, int j)
 
 Matrice  Matrice::dilate() const
 {
-	Matrice m(h(),w());
+	Matrice m(*this);
 	for(unsigned int i=0;i<m_height;i++) 
 		for(unsigned int j=0;j<m_width;j++)
 			if(m_data[i*m_width+j]==0){
