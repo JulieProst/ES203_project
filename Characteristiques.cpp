@@ -7,7 +7,7 @@ using namespace std;
 
 // Calcule le nombre de voisins blancs de l'élément (x,y) de la matrice
 // Ne fonctionne pas pour les éléments du bord
-int nbr_voisins_blanc(Matrice matrice, int x, int y)
+int nbr_voisins_blanc(const Matrice& matrice, int x, int y)
 {
     int nbr_voisins = 0;
     if (matrice(x-1,y)==1){nbr_voisins++;}
@@ -17,15 +17,15 @@ int nbr_voisins_blanc(Matrice matrice, int x, int y)
     return nbr_voisins;
 }
 
-int perimeter(Matrice matrice)
+int perimeter(const Matrice & matrice)
 {
     int perimetre = 0;
     int nbr_vois = 0;
     vector<Couple> Index;
 
     // On recense les coordonnees de tous les pixels noirs
-    for(int i = 0; i<64; i++){
-        for(int j = 0; j<64; j++){
+    for(unsigned int i = 1; i<matrice.h()-1; i++){
+        for(unsigned int j = 1; j<matrice.w()-1; j++){
             if(matrice(i,j)==0){
                 Couple couple;
                 couple.i=i;
@@ -46,10 +46,10 @@ int perimeter(Matrice matrice)
     return perimetre;
 }
 
-int surface(Matrice matr){
+int surface(const Matrice& matr){
     int surf=0;
-     for (int i=0; i<62; i++){
-        for (int j=0; j<62; j++){
+     for (unsigned int i=0; i<matr.h(); i++){
+        for (unsigned int j=0; j<matr.w(); j++){
                 if (matr(i,j)==0){
                     surf ++;
                 }
@@ -61,41 +61,36 @@ int surface(Matrice matr){
 // Prend la matrice encadrée en argument
 int rectangularite(const Matrice& mat){
     int h_encardre = mat.h(), w_encadre = mat.w();
-    return((h_encardre*w_encadre)/64*64);
+    return((h_encardre*w_encadre));
 }
 
 /* Donne les caractéristiques d'une matrice 64x64
  caracteres[0] : perimeter
  caracteres[1] : surface
- caracteres[2] : rectangularité
- caracteres[3] : nombre de trous
- caracteres[4] : taille trous
+ caracteres[2] : nombre de trous
 */
 std::vector<int> mat_to_vector(const Matrice& matrice)
 {
     std::vector<int> caracteres;
+    Matrice matricebis = encadrement_chiffre(matrice);
+    matrice.ouverture();
+    matrice.fermeture();
     int perimetre = perimeter(matrice);
     int surf = surface(matrice);
-    Matrice matricebis = encadrement_chiffre(matrice);
-    int rectangle = rectangularite(matricebis);
-    int taille = taille_trous(matricebis);
-
     // Calcul du coef de normalisation pour le perimeter et la surface
     int height = matricebis.h(), width = matricebis.w();
-    int coef_norm = 10000/(height*width);
-
-    matricebis = remplissage(matricebis);
+    int coef_norm = 10000/(height>width?height:width);
+    coef_norm=1;
+    //remplissage(matricebis);
     int nb_trous = nbr_trous(matricebis);
     caracteres.push_back(coef_norm*perimetre);
     caracteres.push_back(coef_norm*surf);
-    caracteres.push_back(rectangle);
-    caracteres.push_back(nb_trous);
-    caracteres.push_back(coef_norm*taille);
+    caracteres.push_back(nb_trous*100);
     return caracteres;
 }
 
 // Renvoit 1 si le pixel (x,y) est externe, 0 sinon
-bool is_external(Matrice mat, unsigned int x, unsigned int y)
+bool is_external(const Matrice& mat, unsigned int x, unsigned int y)
 {
     int nbr_noir=0;
     Matrice matrice = mat.sous_matrice(x,y,2,2);
@@ -109,7 +104,7 @@ bool is_external(Matrice mat, unsigned int x, unsigned int y)
 }
 
 // Renvoit 1 si le pixel (x,y) est interne, 0 sinon
-bool is_internal(Matrice mat,unsigned int x, unsigned int y)
+bool is_internal(const Matrice& mat,unsigned int x, unsigned int y)
 {
     int nbr_noir=0;
     Matrice matrice = mat.sous_matrice(x,y,2,2);
@@ -144,18 +139,17 @@ Matrice encadrement_chiffre(const Matrice& matrice)
 
     int h = nbr_line_fin - nbr_line_deb;
     int w = nbr_col_fin - nbr_col_deb;
-    return matrice.sous_matrice(nbr_line_deb, nbr_col_deb, h, w);
+    return matrice.sous_matrice(nbr_line_deb-1, nbr_col_deb-1, h+2, w+2);
 }
 
 
-// Remplissage des bords de la sous-matrice obtenue par encadrement
-Matrice remplissage(const Matrice& matrice)
+void remplissage(const Matrice& matrice)
 {
     unsigned int j = 0;
     int k = matrice.w()-1;
-    for(unsigned int i=0; i<matrice.h(); i++){
+    for(unsigned int i=0; i<matrice.h(); i++) {
         // Pour remplir en noir les bords gauche de l'image
-        while(matrice(i,j)==1 && j<matrice.w()){
+        while(matrice(i,j)==1 && j<matrice.w()) {
             matrice(i,j)=0;
             j++;
         }
@@ -167,26 +161,12 @@ Matrice remplissage(const Matrice& matrice)
         }
         k=matrice.w()-1;
     }
-    return matrice;
-}
-
-int taille_trous(const Matrice& matrice){
-    int taille = 0;
-    for(unsigned int i=0; i<matrice.h(); i++){
-        for(unsigned int j=0; j<matrice.w(); j++){
-            if(matrice(i,j)==1){
-                taille++;
-            }
-        }
-    }
-    return taille;
 }
 
 int nbr_trous(const Matrice& matrice)
 {
     int nbr_t=0;
     int e=0, i=0;
-
     for(unsigned int x=0; x<matrice.h()-1; x++){
         for(unsigned int y=0; y<matrice.w()-1; y++){
             if(is_external(matrice, x, y)){

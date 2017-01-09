@@ -19,7 +19,7 @@ Couple distanceEuclidienne(Point a, Point b){
     if (a.coord.size() != b.coord.size()) {
         throw std::runtime_error("Les deux points n'ont pas le même nombre de coordonnées, distance impossible à calculer");}
     for (unsigned int i=0; i<a.coord.size();i++) {
-        j = j + (a.coord[i]-b.coord[i])*(a.coord[i]-b.coord[i]);
+        j+=(a.coord[i]-b.coord[i])*(a.coord[i]-b.coord[i]);
     }
     return Couple(j,a.etiquette);
 }

@@ -5,6 +5,7 @@
 #include<time.h>
 #include<fstream>
 #include"graphe.h"
+#include "Characteristiques.h"
 
 std::string inString(int n)
 {

@@ -28,14 +28,14 @@ Matrice::~Matrice()
 int& Matrice::operator()(unsigned int i, unsigned int j) const
 {
 	if(i>= m_height || j >= m_width)
-		throw std::runtime_error( "Indices out of range." );
+		throw std::runtime_error( "Indices out of range. Operator()(i,j)" );
 	return m_data[i*m_width+j];
 }
 
 int& Matrice::operator()(unsigned int i) const
 {
 	if(i>= m_height*m_width)
-		throw std::runtime_error( "Indices out of range." );
+		throw std::runtime_error( "Indices out of range. Operator()(i)" );
 	return m_data[i];
 }
 
@@ -68,7 +68,7 @@ std::ostream& operator<<(std::ostream& oss, const Matrice& M)
 Matrice Matrice::sous_matrice(unsigned int i, unsigned int j, unsigned int h, unsigned int w) const
 {
 	if(i+h> m_height || j+w > m_width)
-		throw std::runtime_error( "Indices out of range." );
+		throw std::runtime_error( "Indices out of range. sous_matrice" );
 	Matrice mat(h,w);
 
 	for(unsigned int a=0;a<h;a++)
@@ -87,12 +87,10 @@ Matrice Matrice::lettre(unsigned int n)
 
 int Matrice::somme()
 {
-    int sum = 0;
-    for(unsigned int i=0; i<m_width*m_height; i++)
-    {
-        sum+=m_data[i];
-    }
-    return sum;
+	int sum = 0;
+	for(unsigned int i=0; i<m_width*m_height; i++)
+		sum+=m_data[i];
+	return sum;
 }
 
 unsigned int somme_line(const Matrice& matrice, int i)
@@ -114,3 +112,59 @@ unsigned int somme_col(const Matrice& matrice, int j)
     }
     return sum;
 }
+
+void Matrice::dilate() const
+{
+	for(unsigned int i=0;i<m_height;i++) 
+		for(unsigned int j=0;j<m_width;j++)
+			if(m_data[i*m_width+j]==0){
+				if(i>0)
+					m_data[(i-1)*m_width+j]=0;
+				if(j>0)
+					m_data[i*m_width+j-1]=0;
+				if(i>0 && j>0)
+					m_data[(i-1)*m_width+j-1]=0;
+				if(i>0 && j<m_width-1)
+					m_data[(i-1)*m_width+j+1]=0;
+				if(j<m_width-1)
+					m_data[i*m_width+j+1]=0;
+				if(j<m_width-1 && i<m_height-1)
+					m_data[(i+1)*m_width+j+1]=0;
+				if(i<m_height-1)
+					m_data[(i+1)*m_width+j]=0;
+				if(i<m_height-1 && j>0)
+					m_data[(i+1)*m_width+j-1]=0;
+
+	}
+}
+
+void Matrice::erode() const 
+{
+	Matrice a(*this);
+	for(unsigned int i=1;i<m_height-1;i++)
+		for(unsigned int j=1;j<m_width-1;j++) 
+		if(m_data[i*m_width+j]==0){
+			if(m_data[(i-1)*m_width+j-1] ||
+			m_data[(i-1)*m_width+j] ||
+			m_data[(i-1)*m_width+j+1] ||
+			m_data[i*m_width+j+1] ||
+			m_data[(i+1)*m_width +j+1] ||
+			m_data[(i+1)*m_width+j] ||
+			m_data[(i+1)*m_width+j-1] ||
+			m_data[i*m_width+j-1])
+				a(i,j)=1;
+	}
+}
+
+void Matrice::ouverture() const
+{
+	erode();
+	dilate();
+}
+
+void Matrice::fermeture() const
+{
+	dilate();
+	erode();
+}
+
