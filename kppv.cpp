@@ -1,7 +1,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include"kppv.h"
-#define CONSTANTE_K_PPV 9
+#define CONSTANTE_K_PPV 20
 
 
 class Couple {
