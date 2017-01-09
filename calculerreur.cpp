@@ -109,7 +109,7 @@ void calculErreur(std::vector<int>(*f)(const Matrice&),int(*g)(const std::vector
 	std::vector<Point> graph;
 
 
-	std::ifstream ff(nom+"/apprentissage.txt");
+	std::ifstream ff((nom+"/apprentissage.txt").c_str());
 	if(t==LEARN_AND_WATCH || !ff.good()) 
 		graph=createGraphe(f,nom);
 	else
